@@ -23,3 +23,4 @@
 #define SYS_shutdown 22
 #define SYS_date 23
 #define SYS_listpid 24
+#define SYS_cp 25

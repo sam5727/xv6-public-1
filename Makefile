@@ -177,6 +177,7 @@ UPROGS=\
 	_shutdown\
 	_date\
 	_listpid\
+	_cp\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

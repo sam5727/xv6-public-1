@@ -76,7 +76,6 @@ allocproc(void)
 {
   struct proc *p;
   char *sp;
-
   acquire(&ptable.lock);
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
@@ -90,6 +89,9 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   p->priority = 10;
+  //cmostime(p->r);
+  
+
 
   release(&ptable.lock);
 
@@ -113,7 +115,6 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
-
   return p;
 }
 
@@ -570,7 +571,7 @@ showPid(void)
   struct proc *p;
   sti();
   acquire(&ptable.lock);
-  cprintf("name \t\t pid \t state \t \t priority\n");
+  cprintf("name \t\t pid \t state \t \t priority \t date\n");
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->priority != 0){
       cprintf("%s", p->name);
@@ -585,8 +586,28 @@ showPid(void)
         cprintf("\t %d \t RUNNING \t %d\n", p->pid, p->priority);
       if(p->state == RUNNABLE)
         cprintf("\t %d \t RUNNABLE \t %d\n", p->pid, p->priority);
+
+      //cprintf("\t %d\n", p->r->month);
+
+
     }
   }
   release(&ptable.lock);
   return 0;
+}
+
+int 
+changePriority(int pid, int priority)
+{
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      p->priority = priority;
+      break;
+    }
+  }
+  release(&ptable.lock);
+
+  return pid;
 }

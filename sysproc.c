@@ -38,7 +38,6 @@ sys_kill(void)
 
 
 // shutdown syscall
-
 int
 sys_shutdown(void)
 {
@@ -46,6 +45,21 @@ sys_shutdown(void)
 
 }
 
+// changePriority syscall
+int
+sys_cp(void)
+{
+  int pid, priority;
+  if(argint(0, &pid) < 0)
+    return -1;
+  if(argint(1, &priority) < 0)
+    return -1;
+
+  return changePriority(pid, priority);
+
+}
+
+// listpid syscall
 int
 sys_listpid(void)
 {

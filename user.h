@@ -26,6 +26,7 @@ int uptime(void);
 int shutdown(void);
 int date(struct rtcdate*);
 int listpid(void);
+int cp(int, int);
 
 //date.c
 void pulseZero(int, char*);
