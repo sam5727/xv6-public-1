@@ -23,6 +23,12 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int shutdown(void);
+int date(struct rtcdate*);
+int listpid(void);
+
+//date.c
+void pulseZero(int, char*);
 
 // ulib.c
 int stat(char*, struct stat*);
@@ -37,3 +43,5 @@ void* memset(void*, int, uint);
 void* malloc(uint);
 void free(void*);
 int atoi(const char*);
+void itoa(int, char*);
+void reverse(char*);

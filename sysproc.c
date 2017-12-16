@@ -36,6 +36,32 @@ sys_kill(void)
   return kill(pid);
 }
 
+
+// shutdown syscall
+
+int
+sys_shutdown(void)
+{
+  return showPid();
+
+}
+
+int
+sys_listpid(void)
+{
+  return showPid();
+}
+
+int
+sys_date(struct rtcdate *r)
+{
+  if (argptr(0, (void *)&r, sizeof(*r)) < 0)
+    return -1;
+
+  cmostime(r);
+  return 0;
+}
+
 int
 sys_getpid(void)
 {
@@ -89,3 +115,4 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
