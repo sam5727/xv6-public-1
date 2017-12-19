@@ -329,6 +329,7 @@ scheduler(void)
   struct proc *p1;
   struct cpu *c = mycpu();
   c->proc = 0;
+
   for(;;){
     sti();
     struct proc *highP;
@@ -340,11 +341,12 @@ scheduler(void)
       for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
         if(p1->state != RUNNABLE)
           continue;
-        if(highP->priority > p1->priority)
+        if(highP->priority < p1->priority)
           highP = p1;
       }
       p = highP;
       c->proc = p;
+      p->access += 1;
       switchuvm(p);
       p->state = RUNNING;
       swtch(&(c->scheduler), p->context);
@@ -352,8 +354,20 @@ scheduler(void)
 
       c->proc = 0;
     }
+    // for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    //   if(p->priority > 10){
+    //     if(p == highP)
+    //       p->priority -= 1;
+    //     else
+    //       p->priority += 1;
+    //   }
+    // }
+
     release(&ptable.lock);
   }
+
+
+
   // struct proc *p;
   // struct cpu *c = mycpu();
   // c->proc = 0;
@@ -374,7 +388,7 @@ scheduler(void)
   //     c->proc = p;
   //     switchuvm(p);
   //     p->state = RUNNING;
-
+  //     //cprintf("RUN %s, [pid %d]\n",p->name, p->pid);
   //     swtch(&(c->scheduler), p->context);
   //     switchkvm();
 
@@ -571,24 +585,23 @@ showPid(void)
   struct proc *p;
   sti();
   acquire(&ptable.lock);
-  cprintf("name \t\t pid \t state \t \t priority \t date\n");
+  cprintf("name \t\t pid \t state \t \t priority\taccess\n");
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->priority != 0){
       cprintf("%s", p->name);
+
       if(strlen(p->name) < 10){
         for(int i = 10; i > strlen(p->name); i--){
           cprintf(" ");
         }
       }
+
       if(p->state == SLEEPING)
-        cprintf("\t %d \t SLEEPING \t %d\n", p->pid, p->priority);
-      if(p->state == RUNNING)
-        cprintf("\t %d \t RUNNING \t %d\n", p->pid, p->priority);
-      if(p->state == RUNNABLE)
-        cprintf("\t %d \t RUNNABLE \t %d\n", p->pid, p->priority);
-
-      //cprintf("\t %d\n", p->r->month);
-
+        cprintf("\t %d \t SLEEPING \t %d \t\t %d\n", p->pid, p->priority, p->access);
+      else if(p->state == RUNNING)
+        cprintf("\t %d \t RUNNING \t %d \t\t %d\n", p->pid, p->priority, p->access);
+      else if(p->state == RUNNABLE)
+        cprintf("\t %d \t RUNNABLE \t %d \t\t %d\n", p->pid, p->priority, p->access);
 
     }
   }
@@ -601,12 +614,14 @@ changePriority(int pid, int priority)
 {
   struct proc *p;
   acquire(&ptable.lock);
+
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->pid == pid){
       p->priority = priority;
       break;
     }
   }
+  
   release(&ptable.lock);
 
   return pid;

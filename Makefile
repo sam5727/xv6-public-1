@@ -178,6 +178,7 @@ UPROGS=\
 	_date\
 	_listpid\
 	_cp\
+	_tester\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
