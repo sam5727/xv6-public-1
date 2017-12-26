@@ -107,6 +107,7 @@ extern int sys_shutdown(void);
 extern int sys_date(void);
 extern int sys_listpid(void);
 extern int sys_cp(void);
+extern int sys_find(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -134,6 +135,7 @@ static int (*syscalls[])(void) = {
 [SYS_date]    sys_date,
 [SYS_listpid] sys_listpid,
 [SYS_cp]      sys_cp,
+[SYS_find]    sys_find,
 };
 
 void

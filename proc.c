@@ -89,9 +89,8 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   p->priority = DEFAULTP;
+  p->maxp = DEFAULTP;
   //cmostime(p->r);
-  
-
 
   release(&ptable.lock);
 
@@ -617,10 +616,43 @@ changePriority(int pid, int priority)
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->pid == pid){
+      if(priority > p->priority)
+        p->maxp = priority;
       p->priority = priority;
       break;
     }
   }
+  
+  release(&ptable.lock);
+
+  return pid;
+}
+
+int
+findpid(int pid)
+{
+  struct proc *p;
+  bool isfind = false;
+  acquire(&ptable.lock);
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      isfind = true;
+      break;
+    }
+  }
+  if(isfind){
+    cprintf("pid: %d\n", p->pid);
+    cprintf("name: %s\n", p->name);
+    cprintf("size: %d\n", p->sz);
+    cprintf("priority: %d\n", p->priority);
+    cprintf("highest priority: %d\n", p->maxp);
+    cprintf("parent pid: %d\n", p->parent->pid);
+  }else{
+    cprintf("pid not found in ptable\n");
+    //return -1;
+  }
+
   
   release(&ptable.lock);
 

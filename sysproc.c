@@ -36,13 +36,11 @@ sys_kill(void)
   return kill(pid);
 }
 
-
 // shutdown syscall
 int
 sys_shutdown(void)
 {
   return showPid();
-
 }
 
 // changePriority syscall
@@ -56,7 +54,16 @@ sys_cp(void)
     return -1;
 
   return changePriority(pid, priority);
+}
 
+// find syscall
+int
+sys_find(void)
+{
+  int pid;
+  if(argint(0, &pid) < 0)
+    return -1;
+  return findpid(pid);
 }
 
 // listpid syscall

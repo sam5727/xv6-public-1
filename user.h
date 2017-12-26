@@ -27,6 +27,7 @@ int shutdown(void);
 int date(struct rtcdate*);
 int listpid(void);
 int cp(int, int);
+int find(int);
 
 //date.c
 void pulseZero(int, char*);
