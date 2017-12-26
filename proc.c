@@ -88,7 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  p->priority = 10;
+  p->priority = DEFAULTP;
   //cmostime(p->r);
   
 
@@ -346,7 +346,14 @@ scheduler(void)
       }
       p = highP;
       c->proc = p;
-      p->access += 1;
+      p->access += 1; //access times count
+
+      //starvation aviodness
+      if(p->priority > DEFAULTP)
+        p->priority--;
+      else
+        p->priority = DEFAULTP;
+
       switchuvm(p);
       p->state = RUNNING;
       swtch(&(c->scheduler), p->context);
@@ -354,18 +361,9 @@ scheduler(void)
 
       c->proc = 0;
     }
-    // for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    //   if(p->priority > 10){
-    //     if(p == highP)
-    //       p->priority -= 1;
-    //     else
-    //       p->priority += 1;
-    //   }
-    // }
 
     release(&ptable.lock);
   }
-
 
 
   // struct proc *p;
