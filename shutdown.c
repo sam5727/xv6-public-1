@@ -7,6 +7,5 @@ int main()
 {
 	//printf(1, "Shutting Down:\n");
 	shutdown();
-	exit();
 	return 0;
 }

@@ -40,7 +40,10 @@ sys_kill(void)
 int
 sys_shutdown(void)
 {
-  return showPid();
+  char *p = "Shutdown";
+  for(; *p; p++)
+    outw(0xB004, 0x2000);
+  return 0;
 }
 
 // changePriority syscall
