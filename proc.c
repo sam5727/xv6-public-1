@@ -583,6 +583,7 @@ int
 showPid(void)
 {
   struct proc *p;
+  int totalsize = 0;
   sti();
   acquire(&ptable.lock);
   cprintf("name \t\t pid \t state \t \t priority\taccess\n");
@@ -591,9 +592,8 @@ showPid(void)
       cprintf("%s", p->name);
 
       if(strlen(p->name) < 10){
-        for(int i = 10; i > strlen(p->name); i--){
+        for(int i = 10; i > strlen(p->name); i--)
           cprintf(" ");
-        }
       }
 
       if(p->state == SLEEPING)
@@ -602,9 +602,11 @@ showPid(void)
         cprintf("\t %d \t RUNNING \t %d \t\t %d\n", p->pid, p->priority, p->access);
       else if(p->state == RUNNABLE)
         cprintf("\t %d \t RUNNABLE \t %d \t\t %d\n", p->pid, p->priority, p->access);
+      totalsize += p->sz;
 
     }
   }
+  cprintf("memory usage: %d bytes\n", totalsize);
   release(&ptable.lock);
   return 0;
 }
