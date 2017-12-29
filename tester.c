@@ -16,6 +16,9 @@ int main(int argc, char *argv[])
 	else
 		n = atoi(argv[1]);
 
+	if(n < 0 || n > 10)
+		n = 2;
+
 	if(argc < 3)
 		d = 1.0;
 	else
@@ -30,7 +33,7 @@ int main(int argc, char *argv[])
 			wait();
 		}else{
 			for(i = 0; i < MAXNUM; i += d)
-				x = x + PI * 89.64;
+				x = x + PI * 141.4;
 			break;
 		}
 	}
