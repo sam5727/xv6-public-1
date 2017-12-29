@@ -329,33 +329,39 @@ scheduler(void)
   struct cpu *c = mycpu();
   c->proc = 0;
 
-  for(;;){
+  for(;;)
+  {
     sti();
     struct proc *highP;
     acquire(&ptable.lock);
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+    {
       if(p->state != RUNNABLE)
         continue;
+        
       highP = p;
-      for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
+
+      for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++)
+      {
         if(p1->state != RUNNABLE)
           continue;
         if(highP->priority < p1->priority)
           highP = p1;
       }
-      p = highP;
-      c->proc = p;
-      p->access += 1; //access times count
+
+      //p = highP;
+      c->proc = highP;
+      highP->access += 1; //access times count
 
       //starvation aviodness
-      if(p->priority > DEFAULTP)
-        p->priority--;
+      if(highP->priority > DEFAULTP)
+        highP->priority--;
       else
-        p->priority = DEFAULTP;
+        highP->priority = DEFAULTP;
 
-      switchuvm(p);
-      p->state = RUNNING;
-      swtch(&(c->scheduler), p->context);
+      switchuvm(highP);
+      highP->state = RUNNING;
+      swtch(&(c->scheduler), highP->context);
       switchkvm();
 
       c->proc = 0;
@@ -363,7 +369,9 @@ scheduler(void)
 
     release(&ptable.lock);
   }
+}
 
+  // origin
 
   // struct proc *p;
   // struct cpu *c = mycpu();
@@ -396,7 +404,7 @@ scheduler(void)
   //   release(&ptable.lock);
 
   // }
-}
+
 
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
