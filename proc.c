@@ -656,13 +656,9 @@ findpid(int pid)
     cprintf("priority: %d\n", p->priority);
     cprintf("highest priority: %d\n", p->maxp);
     cprintf("parent pid: %d\n", p->parent->pid);
-  }else{
+  }else
     cprintf("pid not found in ptable\n");
-    //return -1;
-  }
-
   
   release(&ptable.lock);
-
   return pid;
 }

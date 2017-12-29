@@ -5,14 +5,11 @@
 int main(int argc, char *argv[])
 {
 	struct rtcdate r;
-	//char tmp[1];
 	if(date(&r))
 	{
 		printf(2, "date failed\n");
 		exit();
 	}
-
-
 
 	if(argc == 2)
 	{
@@ -57,8 +54,6 @@ int main(int argc, char *argv[])
 	pulseZero(r.second, " ");
 	printf(1, "\n");
 
-	// // printf(1, "%d-%d %d %d:%d:%d\n", r.month, r.day, r.year, r.hour, r.minute, r.second);
-
 	exit();
 }
 
@@ -71,5 +66,4 @@ void pulseZero(int num, char* c)
 		printf(1,"%d", num);
 
 	printf(1, "%s", c);
-
 }

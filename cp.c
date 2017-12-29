@@ -19,5 +19,4 @@ main(int argc, char *argv[])
 	cp(pid, priority);
 
 	exit();
-
 }

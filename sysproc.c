@@ -76,6 +76,7 @@ sys_listpid(void)
   return showPid();
 }
 
+// date syscall
 int
 sys_date(struct rtcdate *r)
 {
